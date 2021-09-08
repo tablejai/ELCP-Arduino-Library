@@ -10,8 +10,8 @@ typedef enum
 class ELCPMotor : public ELCPPort
 {
 public:
-    ELCPMotor(int port) : ELCPPort{port} {}
     void move(ELCPMotorDir direction, int speed);
+    ELCPMotor(int port) : ELCPPort{port} {}
 
 protected:
     void init() override;
