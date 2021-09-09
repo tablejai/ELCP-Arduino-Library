@@ -25,6 +25,7 @@ public:
     LeverStatus getSC();
     LeverStatus getSD();
     XYTheta getXYTheta();
+    uint16_t getChannel(int channel);
 
 private:
     uint16_t channels[16];

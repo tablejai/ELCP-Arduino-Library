@@ -4,10 +4,10 @@
 #define RightJoyYValue channels[1]
 #define LeftJoyYValue channels[2]
 #define LeftJoyXValue channels[3]
-#define SAValue channels
-#define SBValue channels
-#define SCValue channels
-#define SDValue channels
+#define SAValue channels[4]
+#define SBValue channels[5]
+#define SCValue channels[6]
+#define SDValue channels[7]
 
 void ELCPController::begin() { SBUS::begin(); }
 
@@ -40,27 +40,32 @@ uint16_t ELCPController::getLeftJoyY()
 
 ELCPController::LeverStatus ELCPController::getSA()
 {
-    return SAValue == 1024 ? LEVER_UP : LEVER_DOWN;
+    return SAValue < 1000 ? LEVER_UP : LEVER_DOWN;
 }
 
 ELCPController::LeverStatus ELCPController::getSB()
 {
-    return SBValue == 1024 ? LEVER_UP : SBValue == 1024 ? LEVER_MID
-                                                        : LEVER_DOWN;
+    return SBValue < 1000 ? LEVER_UP : SBValue < 1500 ? LEVER_MID
+                                                      : LEVER_DOWN;
 }
 
 ELCPController::LeverStatus ELCPController::getSC()
 {
-    return SCValue == 1024 ? LEVER_UP : SCValue == 1024 ? LEVER_MID
-                                                        : LEVER_DOWN;
+    return SCValue < 1000 ? LEVER_UP : SCValue < 1500 ? LEVER_MID
+                                                      : LEVER_DOWN;
 }
 
 ELCPController::LeverStatus ELCPController::getSD()
 {
-    return SDValue == 1024 ? LEVER_UP : LEVER_DOWN;
+    return SDValue < 1000 ? LEVER_UP : LEVER_DOWN;
 }
 
 XYTheta ELCPController::getXYTheta()
 {
-    return (XYTheta){.x = RightJoyXValue, .y = RightJoyYValue, .theta = LeftJoyXValue};
+    return (XYTheta){.x = (float)RightJoyXValue - 1024, .y = (float)RightJoyYValue, .theta = (float)LeftJoyXValue};
+}
+
+uint16_t ELCPController::getChannel(int channel)
+{
+    return channels[channel];
 }
