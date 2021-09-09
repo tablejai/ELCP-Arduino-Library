@@ -10,10 +10,12 @@ void ELCPMotor::move(ELCPMotorDir direction, int speed)
     {
         analogWrite(_portgpio, 255);
     }
-    if (speed >= 0 && speed <= 255)
-    {
+    if (speed <= 0)
+        analogWrite(_portpwm, 0);
+    else if (speed >= 255)
+        analogWrite(_portpwm, 255);
+    else
         analogWrite(_portpwm, speed);
-    }
 }
 
 void ELCPMotor::init()

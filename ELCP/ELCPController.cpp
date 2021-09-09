@@ -16,8 +16,6 @@ bool ELCPController::read()
     return SBUS::read(&channels[0], &failSafe, &lostFrame);
 }
 
-void ELCPController::debug() {}
-
 uint16_t ELCPController::getRightJoyX()
 {
     return RightJoyXValue;
@@ -62,10 +60,20 @@ ELCPController::LeverStatus ELCPController::getSD()
 
 XYTheta ELCPController::getXYTheta()
 {
-    return (XYTheta){.x = (float)RightJoyXValue - 1024, .y = (float)RightJoyYValue, .theta = (float)LeftJoyXValue};
+    return (XYTheta){.x = ((float)RightJoyXValue - 1024) / 820.0, .y = ((float)RightJoyYValue - 1024) / 820.0, .theta = ((float)LeftJoyXValue - 1000) / 820.0};
 }
 
 uint16_t ELCPController::getChannel(int channel)
 {
     return channels[channel];
+}
+
+void ELCPController::debug()
+{
+    Serial.print("X: ");
+    Serial.println(getXYTheta().x);
+    Serial.print("Y: ");
+    Serial.println(getXYTheta().y);
+    Serial.print("Theta: ");
+    Serial.println(getXYTheta().theta);
 }

@@ -17,12 +17,13 @@ public:
     ELCPWheelbase(int front_left_wheel, int front_right_wheel, int back_left_wheel, int back_right_wheel, float wheel_to_x_centre, float wheel_to_y_centre) : motors{front_left_wheel, front_right_wheel, back_left_wheel, back_right_wheel}
     {
         wheels_forward_dir[0] = 1;
-        wheels_forward_dir[1] = 1;
+        wheels_forward_dir[1] = 0;
         wheels_forward_dir[2] = 1;
-        wheels_forward_dir[3] = 1;
+        wheels_forward_dir[3] = 0;
     }
 
-    void wbToWheelVel(XYTheta);
+    void wbToWheelVel(XYTheta, float);
+    void moveWheelOnly(uint8_t, uint8_t, float);
 
 private:
     ELCPMotor motors[4];
