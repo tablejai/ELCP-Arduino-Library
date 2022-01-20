@@ -22,7 +22,7 @@ public:
         wheels_forward_dir[3] = 0;
     }
 
-    void wbToWheelVel(XYTheta, float);
+    void wbToWheelVel(XYTheta, float, bool);
     void moveWheelOnly(uint8_t, uint8_t, float);
 
 private:

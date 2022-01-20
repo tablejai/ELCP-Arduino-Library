@@ -8,6 +8,8 @@
 #define SBValue channels[5]
 #define SCValue channels[6]
 #define SDValue channels[7]
+#define JOYDENOM 820.0f
+#define JOYTHRESHOLD 0.05f
 
 void ELCPController::begin() { SBUS::begin(); }
 
@@ -36,31 +38,35 @@ uint16_t ELCPController::getLeftJoyY()
     return LeftJoyYValue;
 }
 
-ELCPController::LeverStatus ELCPController::getSA()
+LeverStatus ELCPController::getSA()
 {
     return SAValue < 1000 ? LEVER_UP : LEVER_DOWN;
 }
 
-ELCPController::LeverStatus ELCPController::getSB()
+LeverStatus ELCPController::getSB()
 {
     return SBValue < 1000 ? LEVER_UP : SBValue < 1500 ? LEVER_MID
                                                       : LEVER_DOWN;
 }
 
-ELCPController::LeverStatus ELCPController::getSC()
+LeverStatus ELCPController::getSC()
 {
     return SCValue < 1000 ? LEVER_UP : SCValue < 1500 ? LEVER_MID
                                                       : LEVER_DOWN;
 }
 
-ELCPController::LeverStatus ELCPController::getSD()
+LeverStatus ELCPController::getSD()
 {
     return SDValue < 1000 ? LEVER_UP : LEVER_DOWN;
 }
 
 XYTheta ELCPController::getXYTheta()
 {
-    return (XYTheta){.x = ((float)RightJoyXValue - 1024) / 820.0, .y = ((float)RightJoyYValue - 1024) / 820.0, .theta = ((float)LeftJoyXValue - 1000) / 820.0};
+    XYTheta joy_output = (XYTheta){.x = ((float)RightJoyXValue - 1024) / JOYDENOM, .y = ((float)RightJoyYValue - 1024) / JOYDENOM, .theta = ((float)LeftJoyXValue - 1000) / JOYDENOM};
+    joy_output.x = fabs(joy_output.x) < JOYTHRESHOLD? 0 : joy_output.x;
+    joy_output.y = fabs(joy_output.y) < JOYTHRESHOLD? 0 : joy_output.y;
+    joy_output.theta = fabs(joy_output.theta) < JOYTHRESHOLD? 0 : joy_output.theta;
+    return joy_output;
 }
 
 uint16_t ELCPController::getChannel(int channel)

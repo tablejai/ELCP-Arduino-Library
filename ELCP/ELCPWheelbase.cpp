@@ -5,7 +5,7 @@
 #define cos45 0.70710678118
 #define sin45 0.70710678118
 
-void ELCPWheelbase::wbToWheelVel(XYTheta vel, float mult)
+void ELCPWheelbase::wbToWheelVel(XYTheta vel, float mult, bool flip)
 {
     /**
      * 
@@ -19,15 +19,16 @@ void ELCPWheelbase::wbToWheelVel(XYTheta vel, float mult)
      * Will modify if Eric decided to use the controlled version
      * 
      */
-    wheels_vel[0] = vel.x + vel.y + vel.theta;
-    wheels_vel[1] = -vel.x + vel.y - vel.theta;
-    wheels_vel[2] = -vel.x + vel.y + vel.theta;
-    wheels_vel[3] = vel.x + vel.y - vel.theta;
+    int dir = flip ? -1 : 1;
+    wheels_vel[0] = vel.x * dir + vel.y + vel.theta;
+    wheels_vel[1] = -vel.x * dir + vel.y - vel.theta;
+    wheels_vel[2] = -vel.x * dir + vel.y + vel.theta;
+    wheels_vel[3] = vel.x * dir + vel.y - vel.theta;
 
-    motors[0].move(wheels_vel[0] < 0 ? !wheels_forward_dir[0] : wheels_forward_dir[0], fabs(wheels_vel[0] * mult));
-    motors[1].move(wheels_vel[1] < 0 ? !wheels_forward_dir[1] : wheels_forward_dir[1], fabs(wheels_vel[1] * mult));
-    motors[2].move(wheels_vel[2] < 0 ? !wheels_forward_dir[2] : wheels_forward_dir[2], fabs(wheels_vel[2] * mult));
-    motors[3].move(wheels_vel[3] < 0 ? !wheels_forward_dir[3] : wheels_forward_dir[3], fabs(wheels_vel[3] * mult));
+    motors[0].move(wheels_vel[0] < 0.0f ? 0 : 1, fabs(wheels_vel[0] * mult));
+    motors[1].move(wheels_vel[1] < 0.0f ? 1 : 0, fabs(wheels_vel[1] * mult));
+    motors[2].move(wheels_vel[2] < 0.0f ? 0 : 1, fabs(wheels_vel[2] * mult));
+    motors[3].move(wheels_vel[3] < 0.0f ? 1 : 0, fabs(wheels_vel[3] * mult));
 }
 
 void ELCPWheelbase::moveWheelOnly(uint8_t wheel, uint8_t dir, float vel)

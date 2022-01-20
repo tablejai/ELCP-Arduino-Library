@@ -10,4 +10,5 @@ public:
 
 private:
     Servo _servo;
+    bool inited = 0;
 };

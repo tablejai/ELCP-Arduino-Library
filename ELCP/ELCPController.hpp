@@ -1,17 +1,18 @@
 #include "SBUS.h"
 #include "coord_sys.hpp"
 
+typedef enum
+{
+    LEVER_UP,
+    LEVER_MID,
+    LEVER_DOWN
+} LeverStatus;
+
 class ELCPController : SBUS
 {
 public:
     ELCPController() : SBUS(Serial1) {}
 
-    typedef enum
-    {
-        LEVER_UP,
-        LEVER_MID,
-        LEVER_DOWN
-    } LeverStatus;
 
     void begin();
     bool read();
